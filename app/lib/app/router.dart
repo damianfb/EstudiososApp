@@ -8,6 +8,10 @@ import '../features/auth/presentation/screens/create_team_screen.dart';
 import '../features/auth/presentation/screens/join_team_screen.dart';
 import '../features/auth/presentation/screens/login_screen.dart';
 import '../features/auth/presentation/screens/register_screen.dart';
+import '../features/home/presentation/screens/home_screen.dart';
+import '../features/roster/presentation/screens/player_detail_screen.dart';
+import '../features/roster/presentation/screens/roster_screen.dart';
+import '../features/settings/presentation/screens/team_settings_screen.dart';
 
 /// Notifier que escucha cambios de auth para refrescar el router.
 class _RouterNotifier extends ChangeNotifier {
@@ -53,9 +57,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/home',
-        builder: (context, state) => const Scaffold(
-          body: Center(child: Text('Home — Próximamente')),
+        builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: '/roster',
+        builder: (context, state) => const RosterScreen(),
+      ),
+      GoRoute(
+        path: '/roster/:memberId',
+        builder: (context, state) => PlayerDetailScreen(
+          memberId: state.pathParameters['memberId']!,
         ),
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const TeamSettingsScreen(),
       ),
     ],
   );
