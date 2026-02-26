@@ -181,6 +181,71 @@ Si el partido se cerró correctamente pero `generate-summary` falló, la respues
 
 ---
 
-## `generate-summary` *(pendiente)*
+## `generate-summary`
 
 Calcula y persiste el resumen del partido en `match_summary`.
+
+### Lógica
+
+1. Calcula el/los MVP(s): jugador(es) con más votos en `mvp_votes` (incluye empates).
+2. Calcula el protagonista de la jugada: jugador con más votos en `play_of_match_votes`.
+3. Selecciona 2-3 descripciones al azar **sólo** de los votos al protagonista ganador.
+4. Inserta o actualiza el registro en `match_summary`.
+
+> **Anonimato:** `voter_id` y el autor de cada descripción **nunca** se consultan ni se exponen. Solo se leen `voted_for_id`, `protagonist_id` y `description`.
+
+### Parámetros (body JSON)
+
+| Campo | Tipo | Requerido | Descripción |
+|-------|------|-----------|-------------|
+| `match_id` | `string` (UUID) | ✅ | ID del partido cuyo resumen se genera |
+
+### Autorización
+
+- **Sistema:** invocación con `SUPABASE_SERVICE_ROLE_KEY` (llamada interna desde `close-match`).
+- El partido debe estar en estado `closed`.
+
+### Invocación desde Flutter
+
+```dart
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+final supabase = Supabase.instance.client;
+
+Future<void> generateSummary(String matchId) async {
+  final response = await supabase.functions.invoke(
+    'generate-summary',
+    body: {'match_id': matchId},
+  );
+
+  if (response.status != 200) {
+    throw Exception('Error al generar el resumen: ${response.data}');
+  }
+}
+```
+
+### Invocación directa (HTTP)
+
+```bash
+curl -X POST https://<project-ref>.supabase.co/functions/v1/generate-summary \
+  -H "Authorization: Bearer <service-role-key>" \
+  -H "apikey: <service-role-key>" \
+  -H "Content-Type: application/json" \
+  -d '{"match_id": "<uuid>"}'
+```
+
+### Respuesta exitosa
+
+```json
+{
+  "success": true
+}
+```
+
+### Errores
+
+| Status | Descripción |
+|--------|-------------|
+| 400 | `match_id` faltante o partido no está en estado `closed` |
+| 404 | Partido no encontrado |
+| 500 | Error interno |
