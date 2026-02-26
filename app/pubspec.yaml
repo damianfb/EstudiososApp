@@ -1,0 +1,49 @@
+name: estudiosos_app
+description: App mobile para gestión y progreso de equipos de fútbol amateur.
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Backend: Supabase (auth, database, storage, realtime)
+  supabase_flutter: ^2.5.6
+
+  # Estado: Riverpod con generación de código
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Navegación
+  go_router: ^14.2.7
+
+  # Utilidades
+  flutter_dotenv: ^5.1.0   # Variables de entorno (.env)
+  equatable: ^2.0.5        # Comparación de objetos por valor
+  intl: ^0.19.0            # Formateo de fechas y números
+
+  # UI
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Linting
+  flutter_lints: ^4.0.0
+
+  # Generación de código para Riverpod
+  build_runner: ^2.4.11
+  riverpod_generator: ^2.4.3
+  custom_lint: ^0.6.4
+  riverpod_lint: ^2.3.13
+
+flutter:
+  uses-material-design: true
+  # assets:
+  #   - assets/images/
+  #   - .env
